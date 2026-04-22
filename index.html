@@ -21,6 +21,12 @@
 
   <div id="resultado"></div>
 
+  <h2>Exportar CSV</h2>
+  <button onclick="exportarCSV()">Exportar Dados</button>
+
+  <h2>Resetar Planilha</h2>
+  <button onclick="resetarPlanilha()">Resetar</button>
+
 <script>
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyaxGYOi3Orwe6EFcxVJfp1a4Nu8b2_Adh3D84OGxhIQ1_pnEZP0VzbaubTTuOKwsVc/exec";
 
@@ -84,6 +90,31 @@ function gerarLink() {
   const src = document.getElementById("src").value;
   const link = `https://redir.vacuostore.com.br/?produto=${produto}&src=${src}`;
   document.getElementById("resultado").innerText = "Link gerado: " + link;
+}
+
+function exportarCSV() {
+  fetch(`${WEBAPP_URL}?acao=exportarCSV`)
+    .then(r => r.text())
+    .then(csv => {
+      // cria um download automático
+      const blob = new Blob([csv], { type: "text/csv" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "dados.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+}
+
+function resetarPlanilha() {
+  fetch(`${WEBAPP_URL}?acao=resetarPlanilha`)
+    .then(r => r.text())
+    .then(msg => {
+      alert(msg);
+      carregarProdutos();
+      carregarOrigens();
+    });
 }
 
 window.onload = function() {
