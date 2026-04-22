@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerador de Links - VacuoStore</title>
+</head>
+<body>
+  <h2>Adicionar Produto</h2>
+  <input id="nomeProduto" placeholder="Nome curto">
+  <input id="urlProduto" placeholder="URL completa">
+  <button onclick="adicionarProduto()">Adicionar Produto</button>
+
+  <h2>Adicionar Origem</h2>
+  <input id="novaOrigem" placeholder="Nome da origem">
+  <button onclick="adicionarOrigem()">Adicionar Origem</button>
+
+  <h2>Gerar Link</h2>
+  <select id="produto"></select>
+  <select id="src"></select>
+  <button onclick="gerarLink()">Gerar Link</button>
+
+  <div id="resultado"></div>
+
+<script>
+const WEBAPP_URL = "https://script.google.com/macros/s/SEU_DEPLOY_ID/exec";
+
+function adicionarProduto() {
+  const nome = document.getElementById("nomeProduto").value;
+  const url = document.getElementById("urlProduto").value;
+  fetch(`${WEBAPP_URL}?acao=adicionarProduto&nome=${encodeURIComponent(nome)}&url=${encodeURIComponent(url)}`)
+    .then(r => r.text())
+    .then(msg => {
+      alert(msg);
+      carregarProdutos();
+    });
+}
+
+function adicionarOrigem() {
+  const origem = document.getElementById("novaOrigem").value;
+  fetch(`${WEBAPP_URL}?acao=adicionarOrigem&origem=${encodeURIComponent(origem)}`)
+    .then(r => r.text())
+    .then(msg => {
+      alert(msg);
+      carregarOrigens();
+    });
+}
+
+function carregarProdutos() {
+  fetch(`${WEBAPP_URL}?acao=listarProdutos`)
+    .then(r => r.json())
+    .then(lista => {
+      const select = document.getElementById("produto");
+      select.innerHTML = "";
+      lista.forEach(row => {
+        if (row[0] && row[1]) {
+          const opt = document.createElement("option");
+          opt.value = row[0];
+          opt.textContent = row[0];
+          select.appendChild(opt);
+        }
+      });
+    });
+}
+
+function carregarOrigens() {
+  fetch(`${WEBAPP_URL}?acao=listarOrigens`)
+    .then(r => r.json())
+    .then(lista => {
+      const select = document.getElementById("src");
+      select.innerHTML = "";
+      lista.forEach(row => {
+        if (row[0]) {
+          const opt = document.createElement("option");
+          opt.value = row[0];
+          opt.textContent = row[0];
+          select.appendChild(opt);
+        }
+      });
+    });
+}
+
+function gerarLink() {
+  const produto = document.getElementById("produto").value;
+  const src = document.getElementById("src").value;
+  const link = `https://redir.vacuostore.com.br/?produto=${produto}&src=${src}`;
+  document.getElementById("resultado").innerText = "Link gerado: " + link;
+}
+
+window.onload = function() {
+  carregarProdutos();
+  carregarOrigens();
+};
+</script>
+</body>
+</html>
