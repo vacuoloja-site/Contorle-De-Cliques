@@ -60,8 +60,8 @@ function carregarProdutos() {
       lista.forEach(row => {
         if (row[0] && row[1]) {
           const opt = document.createElement("option");
-          opt.value = row[0];
-          opt.textContent = row[0];
+          opt.value = row[1]; // agora o value é a URL completa
+          opt.textContent = row[0]; // o texto visível é o nome curto
           select.appendChild(opt);
         }
       });
@@ -86,9 +86,9 @@ function carregarOrigens() {
 }
 
 function gerarLink() {
-  const produto = document.getElementById("produto").value;
+  const produtoUrl = document.getElementById("produto").value; // pega a URL real
   const src = document.getElementById("src").value;
-  const link = `https://redir.vacuostore.com.br/?produto=${produto}&src=${src}`;
+  const link = `${produtoUrl}?src=${src}`; // adiciona o parâmetro src direto na URL
   document.getElementById("resultado").innerText = "Link gerado: " + link;
 }
 
@@ -96,7 +96,6 @@ function exportarCSV() {
   fetch(`${WEBAPP_URL}?acao=exportarCSV`)
     .then(r => r.text())
     .then(csv => {
-      // cria um download automático
       const blob = new Blob([csv], { type: "text/csv" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
