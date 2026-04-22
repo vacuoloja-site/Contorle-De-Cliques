@@ -20,6 +20,7 @@
   <button onclick="gerarLink()">Gerar Link</button>
 
   <div id="resultado"></div>
+  <div id="abrirLink"></div>
 
   <h2>Exportar CSV</h2>
   <button onclick="exportarCSV()">Exportar Dados</button>
@@ -60,8 +61,8 @@ function carregarProdutos() {
       lista.forEach(row => {
         if (row[0] && row[1]) {
           const opt = document.createElement("option");
-          opt.value = row[1]; // agora o value é a URL completa
-          opt.textContent = row[0]; // o texto visível é o nome curto
+          opt.value = row[1]; // URL completa
+          opt.textContent = row[0]; // nome curto
           select.appendChild(opt);
         }
       });
@@ -86,10 +87,18 @@ function carregarOrigens() {
 }
 
 function gerarLink() {
-  const produtoUrl = document.getElementById("produto").value; // pega a URL real
+  const produtoUrl = document.getElementById("produto").value;
   const src = document.getElementById("src").value;
-  const link = `${produtoUrl}?src=${src}`; // adiciona o parâmetro src direto na URL
+  const link = `${produtoUrl}?src=${src}`;
   document.getElementById("resultado").innerText = "Link gerado: " + link;
+
+  // cria botão para abrir em nova aba
+  const abrirDiv = document.getElementById("abrirLink");
+  abrirDiv.innerHTML = "";
+  const btn = document.createElement("button");
+  btn.innerText = "Abrir Produto";
+  btn.onclick = () => window.open(link, "_blank");
+  abrirDiv.appendChild(btn);
 }
 
 function exportarCSV() {
