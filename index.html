@@ -208,16 +208,32 @@ function aplicarCores() {
 
   document.body.style.backgroundColor = bg;
   document.body.style.color = font;
-
   document.querySelectorAll("button").forEach(b => {
     b.style.backgroundColor = btn;
     b.style.color = "#fff";
   });
+
+  // salvar no localStorage
+  localStorage.setItem("bgColor", bg);
+  localStorage.setItem("btnColor", btn);
+  localStorage.setItem("fontColor", font);
 }
 
+// reaplica ao carregar
 window.onload = function() {
   carregarProdutos();
   carregarOrigens();
+
+  const bg = localStorage.getItem("bgColor");
+  const btn = localStorage.getItem("btnColor");
+  const font = localStorage.getItem("fontColor");
+
+  if (bg && btn && font) {
+    document.getElementById("bgColor").value = bg;
+    document.getElementById("btnColor").value = btn;
+    document.getElementById("fontColor").value = font;
+    aplicarCores();
+  }
 };
 </script>
 </body>
