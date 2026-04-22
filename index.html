@@ -27,7 +27,7 @@ const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzlNGiWwbKw80WzrInGy
 function adicionarProduto() {
   const nome = document.getElementById("nomeProduto").value;
   const url = document.getElementById("urlProduto").value;
-  fetch(`${https://script.google.com/macros/s/AKfycbzlNGiWwbKw80WzrInGyW_Y31lyfTrqd2vkEFycur6Afo71_XQ9DWntbhARjQl-Y2BA/exec}?acao=adicionarProduto&nome=${encodeURIComponent(nome)}&url=${encodeURIComponent(url)}`)
+  fetch(`${WEBAPP_URL}?acao=adicionarProduto&nome=${encodeURIComponent(nome)}&url=${encodeURIComponent(url)}`)
     .then(r => r.text())
     .then(msg => {
       alert(msg);
@@ -37,7 +37,7 @@ function adicionarProduto() {
 
 function adicionarOrigem() {
   const origem = document.getElementById("novaOrigem").value;
-  fetch(`${https://script.google.com/macros/s/AKfycbzlNGiWwbKw80WzrInGyW_Y31lyfTrqd2vkEFycur6Afo71_XQ9DWntbhARjQl-Y2BA/exec}?acao=adicionarOrigem&origem=${encodeURIComponent(origem)}`)
+  fetch(`${WEBAPP_URL}?acao=adicionarOrigem&origem=${encodeURIComponent(origem)}`)
     .then(r => r.text())
     .then(msg => {
       alert(msg);
@@ -46,7 +46,7 @@ function adicionarOrigem() {
 }
 
 function carregarProdutos() {
-  fetch(`${https://script.google.com/macros/s/AKfycbzlNGiWwbKw80WzrInGyW_Y31lyfTrqd2vkEFycur6Afo71_XQ9DWntbhARjQl-Y2BA/exec}?acao=listarProdutos`)
+  fetch(`${WEBAPP_URL}?acao=listarProdutos`)
     .then(r => r.json())
     .then(lista => {
       const select = document.getElementById("produto");
@@ -63,7 +63,7 @@ function carregarProdutos() {
 }
 
 function carregarOrigens() {
-  fetch(`${https://script.google.com/macros/s/AKfycbzlNGiWwbKw80WzrInGyW_Y31lyfTrqd2vkEFycur6Afo71_XQ9DWntbhARjQl-Y2BA/exec}?acao=listarOrigens`)
+  fetch(`${WEBAPP_URL}?acao=listarOrigens`)
     .then(r => r.json())
     .then(lista => {
       const select = document.getElementById("src");
