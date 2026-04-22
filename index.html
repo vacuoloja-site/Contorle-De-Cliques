@@ -3,6 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <title>Gerador de Links - VacuoStore</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h2 {
+      margin-top: 25px;
+      color: #444;
+    }
+    input, select, button {
+      margin: 5px 0;
+      padding: 8px 12px;
+      font-size: 14px;
+    }
+    input, select {
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background-color: #0078d7;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005a9e;
+    }
+    #resultado {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    #abrirLink button, #copiarLink button {
+      margin-right: 10px;
+      background-color: #28a745;
+    }
+    #abrirLink button:hover, #copiarLink button:hover {
+      background-color: #1e7e34;
+    }
+  </style>
 </head>
 <body>
   <h2>Adicionar Produto</h2>
@@ -21,6 +64,7 @@
 
   <div id="resultado"></div>
   <div id="abrirLink"></div>
+  <div id="copiarLink"></div>
 
   <h2>Exportar CSV</h2>
   <button onclick="exportarCSV()">Exportar Dados</button>
@@ -92,13 +136,25 @@ function gerarLink() {
   const link = `${produtoUrl}?src=${src}`;
   document.getElementById("resultado").innerText = "Link gerado: " + link;
 
-  // cria botão para abrir em nova aba
+  // Botão Abrir Produto
   const abrirDiv = document.getElementById("abrirLink");
   abrirDiv.innerHTML = "";
-  const btn = document.createElement("button");
-  btn.innerText = "Abrir Produto";
-  btn.onclick = () => window.open(link, "_blank");
-  abrirDiv.appendChild(btn);
+  const btnAbrir = document.createElement("button");
+  btnAbrir.innerText = "Abrir Produto";
+  btnAbrir.onclick = () => window.open(link, "_blank");
+  abrirDiv.appendChild(btnAbrir);
+
+  // Botão Copiar Link
+  const copiarDiv = document.getElementById("copiarLink");
+  copiarDiv.innerHTML = "";
+  const btnCopiar = document.createElement("button");
+  btnCopiar.innerText = "Copiar Link";
+  btnCopiar.onclick = () => {
+    navigator.clipboard.writeText(link).then(() => {
+      alert("Link copiado para a área de transferência!");
+    });
+  };
+  copiarDiv.appendChild(btnCopiar);
 }
 
 function exportarCSV() {
