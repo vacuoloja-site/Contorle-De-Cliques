@@ -40,9 +40,10 @@
     }
     #feedback {
       margin-top: 10px;
-      color: green;
       font-weight: bold;
     }
+    .success { color: green; }
+    .error { color: red; }
     .color-editor {
       margin-top: 20px;
       padding: 10px;
@@ -82,16 +83,34 @@
   <h2>Resetar Planilha</h2>
   <button onclick="resetarPlanilha()">Resetar</button>
 
-  <h2>Editor de Cores</h2>
+  <h2>Editor de Cores e Fontes</h2>
   <div class="color-editor">
     <label>Cor de fundo: <input type="color" id="bgColor" value="#f9f9f9"></label>
     <label>Cor dos botões: <input type="color" id="btnColor" value="#0078d7"></label>
-    <label>Cor da fonte: <input type="color" id="fontColor" value="#333333"></label>
-    <button onclick="aplicarCores()">Aplicar Cores</button>
+    <label>Cor da fonte geral: <input type="color" id="fontColor" value="#333333"></label>
+    <label>Cor dos títulos: <input type="color" id="titleColor" value="#444444"></label>
+    <label>Fonte do site: 
+      <select id="fontFamily">
+        <option value="Arial">Arial</option>
+        <option value="Verdana">Verdana</option>
+        <option value="Tahoma">Tahoma</option>
+        <option value="Georgia">Georgia</option>
+        <option value="Courier New">Courier New</option>
+        <option value="Times New Roman">Times New Roman</option>
+      </select>
+    </label>
+    <button onclick="aplicarCores()">Aplicar Estilo</button>
   </div>
 
 <script>
 const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyaxGYOi3Orwe6EFcxVJfp1a4Nu8b2_Adh3D84OGxhIQ1_pnEZP0VzbaubTTuOKwsVc/exec";
+
+function mostrarFeedback(msg, tipo="success") {
+  const feedback = document.getElementById("feedback");
+  feedback.className = tipo;
+  feedback.innerText = msg;
+  setTimeout(() => feedback.innerText = "", 3000);
+}
 
 function adicionarProduto() {
   const nome = document.getElementById("nomeProduto").value;
@@ -99,9 +118,10 @@ function adicionarProduto() {
   fetch(`${WEBAPP_URL}?acao=adicionarProduto&nome=${encodeURIComponent(nome)}&url=${encodeURIComponent(url)}`)
     .then(r => r.text())
     .then(msg => {
-      alert(msg);
+      mostrarFeedback("✔ " + msg, "success");
       carregarProdutos();
-    });
+    })
+    .catch(() => mostrarFeedback("Erro ao adicionar produto", "error"));
 }
 
 function adicionarOrigem() {
@@ -109,9 +129,10 @@ function adicionarOrigem() {
   fetch(`${WEBAPP_URL}?acao=adicionarOrigem&origem=${encodeURIComponent(origem)}`)
     .then(r => r.text())
     .then(msg => {
-      alert(msg);
+      mostrarFeedback("✔ " + msg, "success");
       carregarOrigens();
-    });
+    })
+    .catch(() => mostrarFeedback("Erro ao adicionar origem", "error"));
 }
 
 function carregarProdutos() {
@@ -123,8 +144,8 @@ function carregarProdutos() {
       lista.forEach(row => {
         if (row[0] && row[1]) {
           const opt = document.createElement("option");
-          opt.value = row[1]; // URL completa
-          opt.textContent = row[0]; // nome curto
+          opt.value = row[1];
+          opt.textContent = row[0];
           select.appendChild(opt);
         }
       });
@@ -154,7 +175,6 @@ function gerarLink() {
   const link = `${produtoUrl}?src=${src}`;
   document.getElementById("resultado").innerText = "Link gerado: " + link;
 
-  // Botão Abrir Produto
   const abrirDiv = document.getElementById("abrirLink");
   abrirDiv.innerHTML = "";
   const btnAbrir = document.createElement("button");
@@ -162,16 +182,13 @@ function gerarLink() {
   btnAbrir.onclick = () => window.open(link, "_blank");
   abrirDiv.appendChild(btnAbrir);
 
-  // Botão Copiar Link
   const copiarDiv = document.getElementById("copiarLink");
   copiarDiv.innerHTML = "";
   const btnCopiar = document.createElement("button");
   btnCopiar.innerText = "Copiar Link";
   btnCopiar.onclick = () => {
     navigator.clipboard.writeText(link).then(() => {
-      const feedback = document.getElementById("feedback");
-      feedback.innerText = "✔ Link copiado com sucesso!";
-      setTimeout(() => feedback.innerText = "", 3000);
+      mostrarFeedback("✔ Link copiado com sucesso!", "success");
     });
   };
   copiarDiv.appendChild(btnCopiar);
@@ -188,26 +205,32 @@ function exportarCSV() {
       a.download = "dados.csv";
       a.click();
       URL.revokeObjectURL(url);
-    });
+      mostrarFeedback("✔ CSV exportado com sucesso!", "success");
+    })
+    .catch(() => mostrarFeedback("Erro ao exportar CSV", "error"));
 }
 
 function resetarPlanilha() {
   fetch(`${WEBAPP_URL}?acao=resetarPlanilha`)
     .then(r => r.text())
     .then(msg => {
-      alert(msg);
+      mostrarFeedback("✔ " + msg, "success");
       carregarProdutos();
       carregarOrigens();
-    });
+    })
+    .catch(() => mostrarFeedback("Erro ao resetar planilha", "error"));
 }
 
 function aplicarCores() {
   const bg = document.getElementById("bgColor").value;
   const btn = document.getElementById("btnColor").value;
   const font = document.getElementById("fontColor").value;
+  const title = document.getElementById("titleColor").value;
+  const fontFamily = document.getElementById("fontFamily").value;
 
   document.body.style.backgroundColor = bg;
   document.body.style.color = font;
+
   document.querySelectorAll("button").forEach(b => {
     b.style.backgroundColor = btn;
     b.style.color = "#fff";
