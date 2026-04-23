@@ -10,6 +10,16 @@
       background-color: #f9f9f9;
       color: #333;
     }
+    margin: 0; /* remove margens padrão */
+    }
+    .topo {
+      height: 500px; /* altura da parte superior */
+      background-color: #3498db; /* azul */
+    }
+    .baixo {
+      min-height: 500px; /* altura mínima da parte inferior */
+      background-color: #2ecc71; /* verde */
+    }
     h2 {
       margin: 25px; /* Aplicar 10px de margem em todos os lados */
       color: #444;
@@ -58,6 +68,12 @@
   </style>
 </head>
 <body>
+   <div class="topo">
+    <!-- Conteúdo da parte superior -->
+  </div>
+  <div class="baixo">
+    <!-- Conteúdo da parte inferior -->
+  </div>
   <h2>Adicionar Produto</h2>
   <input id="nomeProduto" placeholder="Nome curto">
   <input id="urlProduto" placeholder="URL completa">
